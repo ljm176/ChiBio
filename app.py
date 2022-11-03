@@ -45,7 +45,7 @@ sysData = {'M0' : {
    'LASER650' : {'name' : 'LASER650', 'default': 0.5, 'target' : 0.0, 'max': 1.0, 'min' : 0.0,'ON' : 0},
    'UV' : {'WL' : 'UV', 'default': 0.5, 'target' : 0.0, 'max': 1.0, 'min' : 0.0,'ON' : 0},
    'Heat' : {'default': 0.0, 'target' : 0.0, 'max': 1.0, 'min' : 0.0,'ON' : 0,'record' : []},
-   'Thermostat' : {'default': 37.0, 'target' : 0.0, 'max': 50.0, 'min' : 0.0,'ON' : 0,'record' : [],'cycleTime' : 30.0, 'Integral' : 0.0,'last' : -1},
+   'Thermostat' : {'default': 37.0, 'target' : 0.0, 'max': 65.0, 'min' : 0.0,'ON' : 0,'record' : [],'cycleTime' : 30.0, 'Integral' : 0.0,'last' : -1},
    'Experiment' : {'indicator' : 'USR0', 'startTime' : 'Waiting', 'startTimeRaw' : 0, 'ON' : 0,'cycles' : 0, 'cycleTime' : 60.0,'threadCount' : 0},
    'Terminal' : {'text' : ''},
    'AS7341' : {
@@ -322,7 +322,7 @@ def initialise(M):
     sysData[M]['Zigzag']['SwitchPoint']=0
     #Add ALE Button
     sysData[M]['ALE']['ON']=0
-    sysData[M]['ALE']['CurrentRaio']=0.0
+    sysData[M]['ALE']['CurrentRatio']=0.0
     sysData[M]['ALE']['CyclesSinceRatioSwitch']=0
     sysData[M]['ALE']['target'] = 0.0
     
@@ -2080,7 +2080,7 @@ def ALE(M):
 	
     #Possibly modify to zig further. 
     top = centre+zig
-    bottom = centre-centre*0.1
+    bottom = centre-centre*0.3
     
     try:
         last=sysData[M]['OD']['record'][-1]
@@ -2128,7 +2128,7 @@ def ALE(M):
     targetMet = all(gr > targetGrowthRate for gr in prevGrowthRates) and growthRate > targetGrowthRate
     n_cycles = sysData[M]['ALE']['CyclesSinceRatioSwitch']
     
-    if (n_cycles > 2):
+    if (n_cycles > 10):
         newRatio = sysData[M]['ALE']['CurrentRatio'] + sysData[M]['ALE']['RatioIncrement']
         if newRatio < 1:
             sysData[M]['ALE']['CurrentRatio'] = newRatio
